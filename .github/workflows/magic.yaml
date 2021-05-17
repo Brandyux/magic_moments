@@ -1,0 +1,36 @@
+name: Magic web
+# triguer, accion que invoca el workflow, cuando se hace push en la rama master
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+# tareas
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v1
+        
+    - name: actions in flutter
+      run: flutter pub get  #esta fue mi idea
+
+    - name: Enable Flutter web
+      run: flutter config --enable-web
+
+    - name: Install dependencies
+      run: flutter packages get
+
+    - name: Build web
+      run: flutter build web
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.token }}
+        publish_dir: ./build/web
